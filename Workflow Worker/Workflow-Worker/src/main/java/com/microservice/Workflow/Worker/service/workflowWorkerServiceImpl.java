@@ -24,7 +24,7 @@ public class workflowWorkerServiceImpl implements workflowWorkerService{
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<String> entity = new HttpEntity<String>(account.getAccountNumber(),headers);
+            HttpEntity<Account> entity = new HttpEntity<Account>(account,headers);
             
             boolean response = restTemplate.postForObject(url, entity, Boolean.class);
             System.out.println("Response from worker: " + response);
