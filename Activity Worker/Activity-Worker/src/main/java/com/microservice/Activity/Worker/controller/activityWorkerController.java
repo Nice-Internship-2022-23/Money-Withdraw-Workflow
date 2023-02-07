@@ -24,8 +24,9 @@ public class activityWorkerController {
 
     @PostMapping("/check")
     public boolean checkAccount(@RequestBody Account account){
+    	System.out.println(account.getAccountNumber());
         try {
-            return workerService.CheckAccount(account.getAccountNumber());
+            return workerService.CheckAccount(account);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

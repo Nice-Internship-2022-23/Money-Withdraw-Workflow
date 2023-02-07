@@ -1,0 +1,14 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: ACTIVITY-WORKER
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    server-url: http://localhost:8761/eureka

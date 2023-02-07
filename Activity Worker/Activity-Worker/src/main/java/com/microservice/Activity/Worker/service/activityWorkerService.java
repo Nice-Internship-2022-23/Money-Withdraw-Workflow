@@ -6,7 +6,7 @@ public interface activityWorkerService{
     
     public String home();
 
-    public boolean CheckAccount(String account_number);
+    public boolean CheckAccount(Account account);
 
     public boolean VerifyAccount(Account account);
 

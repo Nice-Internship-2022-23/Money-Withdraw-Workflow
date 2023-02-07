@@ -6,10 +6,10 @@ public interface workflowWorkerService {
     
     public String home();
     
-    public boolean callAccountCheckActivity(String account_number);
+    public boolean callAccountCheckActivity(Account account);
 
     public boolean callVerifyUserActivity(Account account);
 
-    public String callWithdrawAmountActivity(Account account, String amount);
+    public String callWithdrawAmountActivity(Account account);
 
 }

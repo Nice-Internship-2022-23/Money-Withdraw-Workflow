@@ -1,4 +1,4 @@
-package com.microservice.Workflow.Worker.Entities;
+package com.microservice.Workflow.Starter.services.Entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +19,6 @@ public class Account {
     	this.accountPin = accountPin;
     }
 	
-	 public Account() {
-			super();
-	}
-	 
 	public Account(String accountNumber, String accountPin, String withdrawAmount) {
 		super();
 		this.accountNumber = accountNumber;
@@ -30,7 +26,11 @@ public class Account {
 		this.withdrawAmount = withdrawAmount;
 	}
     
-    public Account(String accountNumber, String accountPin, String withdrawAmount, boolean isVerified,
+    public Account() {
+		super();
+	}
+
+	public Account(String accountNumber, String accountPin, String withdrawAmount, boolean isVerified,
 			boolean isAccountExist) {
 		super();
 		this.accountNumber = accountNumber;

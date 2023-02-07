@@ -1,29 +1,43 @@
 package com.microservice.Workflow.Starter.services;
 
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.microservice.Workflow.Starter.services.Entities.Account;
+
 
 
 @Service
 public class workflowStarterServiceImpl implements workflowStarterService{
 
-    @Override
-    public String startWorkFlow(String account_number) {
-        try {
-            JSONObject jsonObject = new JSONObject(account_number);
-            String acc_no = (String) jsonObject.get("ACCOUNT_NUMBER");
-            System.out.println("Account Number :" + acc_no);
-            return "Account Exist : \nAccount Number : " + acc_no + "\n" + account_number ;
-            } catch (Exception e) {
-            e.getMessage();
-        }
-        
-        return "Account Not Exist";
-    }
+	@Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public String home() {
         return "Welcome to WorkFlow Starter";
     }
+
+	@Override
+	public String startWorkFlow(Account account) {
+		try {    	
+            String url = "http://localhost:8082/workflowworker/";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Account> entity = new HttpEntity<Account>(account,headers);
+            
+            String response = restTemplate.postForObject(url, entity, String.class);
+            System.out.println("Response from worker: " + response);
+
+            return response;
+	
+		
+		} catch (Exception e) {
+	            return e.getMessage().toString();
+	    }
+	}
     
 }

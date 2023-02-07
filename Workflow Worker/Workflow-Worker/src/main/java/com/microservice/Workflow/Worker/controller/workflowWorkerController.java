@@ -1,6 +1,5 @@
 package com.microservice.Workflow.Worker.controller;
 
-import org.json.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,31 +28,24 @@ public class workflowWorkerController {
     }
 
     @PostMapping
-    public String activityCall(@RequestBody String input){
+    public String activityCall(@RequestBody Account account){
+    	System.out.println(account.isVerified());
         try {
-            JSONObject object = new JSONObject(input);
-            if(object.has("ACCOUNT_NUMBER")){
-                acc_no = object.get("ACCOUNT_NUMBER").toString();
-            } 
-            if(object.has("PASSWORD")){
-                password = object.get("PASSWORD").toString();
-            } 
-            if(object.has("AMOUNT")){
-                amount = object.get("AMOUNT").toString();
-            } 
-            if(object.has("IS_VERIFIED")){
-                IS_VERIFIED = (boolean) object.get("IS_VERIFIED");
-            }
-            if(object.has("IS_ACCOUNT_EXIST")){
-                IS_ACCOUNT_EXIST = (boolean) object.get("IS_ACCOUNT_EXIST");
-            }
+        	if(account.getAccountNumber() == null || account.getAccountPin() == null || account.getWithdrawAmount() == null) {
+        		return "All fields should be filled";
+        	}
+        	else {
+        		acc_no = account.getAccountNumber();
+        		password = account.getAccountPin();
+        		amount = account.getWithdrawAmount();
+        		IS_VERIFIED = account.isVerified();
+        		IS_ACCOUNT_EXIST = account.isAccountExist();
+        	}
 
             if(!IS_ACCOUNT_EXIST){
                 if(acc_no != null){
-                    IS_ACCOUNT_EXIST = workerService.callAccountCheckActivity(acc_no);
-                    if(!IS_ACCOUNT_EXIST) return "Account does not exist";
-                    return "Enter PIN number!";
-    
+                    IS_ACCOUNT_EXIST = workerService.callAccountCheckActivity(account);
+                    if(!IS_ACCOUNT_EXIST) return "Account does not exist";    
                 }
                 else{
                     return "Error in account check.";
@@ -62,10 +54,8 @@ public class workflowWorkerController {
 
             if(!IS_VERIFIED){
                 if(password != null){
-                    IS_VERIFIED = workerService.callVerifyUserActivity(new Account(acc_no, password));
+                    IS_VERIFIED = workerService.callVerifyUserActivity(account);
                     if(!IS_VERIFIED) return "Wrong PIN Inserted";
-                    return "Enter amount";
-
                 } 
                 else{
                     return "Enter Withdraw amount!";
@@ -73,19 +63,16 @@ public class workflowWorkerController {
             }
             
             if(IS_VERIFIED && IS_ACCOUNT_EXIST){
-                System.out.println("Amount : " + amount);
                 if(amount != null){
-                    return workerService.callWithdrawAmountActivity(new Account(acc_no, password), amount);
-                } else{
-                    return "Enter amount:";
+                    return workerService.callWithdrawAmountActivity(account);
+                } else {
+                	return "";
                 }
             } else{
                 return "Error during process!";
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            return e.getMessage().toString();
         }
-        
-        return "No Output";
     }
 }
